@@ -9,9 +9,16 @@
     "astro": "astro"
   },
   "dependencies": {
-    "astro": "^5.17.1"
+    "@google/generative-ai": "^0.24.1",
+    "astro": "^5.17.1",
+    "imap-simple": "^5.1.0",
+    "mailparser": "^3.9.3",
+    "nodemailer": "^8.0.1"
   },
   "devDependencies": {
+    "@types/imap-simple": "^4.2.10",
+    "@types/mailparser": "^3.4.6",
+    "@types/nodemailer": "^7.0.10",
     "@vercel/node": "^5.6.6"
   }
 }

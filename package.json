@@ -9,6 +9,7 @@
     "astro": "astro"
   },
   "dependencies": {
+    "@astrojs/vercel": "^9.0.4",
     "@google/generative-ai": "^0.24.1",
     "astro": "^5.17.1",
     "imap-simple": "^5.1.0",

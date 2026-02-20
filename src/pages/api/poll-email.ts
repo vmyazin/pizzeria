@@ -1,8 +1,8 @@
-import type { VercelRequest, VercelResponse } from '@vercel/node';
+import type { APIRoute } from 'astro';
 import * as imaps from 'imap-simple';
 import { simpleParser } from 'mailparser';
 
-export default async function handler(req: VercelRequest, res: VercelResponse) {
+export const GET: APIRoute = async ({ request }) => {
   console.log('\n--- [CRON] Starting poll-email block ---');
   
   const config = {
@@ -19,7 +19,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   if (!config.imap.user || !config.imap.password) {
       console.error('❌ Missing GMAIL_USER or GMAIL_APP_PASSWORD in environment variables.');
-      return res.status(500).json({ error: 'Missing environment variables' });
+      return new Response(JSON.stringify({ error: 'Missing environment variables' }), { 
+          status: 500, headers: { 'Content-Type': 'application/json' } 
+      });
   }
 
   try {
@@ -68,15 +70,19 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       connection.end();
       console.log('✅ Connections closed.');
 
-      return res.status(200).json({ status: 'Success', messagesProcessed: messages.length });
+      return new Response(JSON.stringify({ status: 'Success', messagesProcessed: messages.length }), {
+          status: 200, headers: { 'Content-Type': 'application/json' }
+      });
 
   } catch (error) {
       console.error('💥 Error in IMAP process:', error);
-      return res.status(500).json({ error: String(error) });
+      return new Response(JSON.stringify({ error: String(error) }), {
+          status: 500, headers: { 'Content-Type': 'application/json' }
+      });
   }
 }
 
-import { analyzeEmailIntent } from './process-change';
+import { analyzeEmailIntent } from '../../lib/process-change';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as nodemailer from 'nodemailer';

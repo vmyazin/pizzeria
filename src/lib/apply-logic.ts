@@ -44,9 +44,10 @@ export async function applyPendingChange(changeId: string) {
         fs.writeFileSync(pendingPath, JSON.stringify(pendingData, null, 2));
         console.log('🗑️ Change removed from pending list.');
 
-        const githubToken = import.meta.env.GITHUB_TOKEN;
-        const githubRepo = import.meta.env.GITHUB_REPO;
-        const vercelHook = import.meta.env.VERCEL_DEPLOY_HOOK_URL;
+        // Fallback checks for both Vercel/Node environment and Astro Vite injected environment
+        const githubToken = import.meta.env.GITHUB_TOKEN || process.env.GITHUB_TOKEN;
+        const githubRepo = import.meta.env.GITHUB_REPO || process.env.GITHUB_REPO;
+        const vercelHook = import.meta.env.VERCEL_DEPLOY_HOOK_URL || process.env.VERCEL_DEPLOY_HOOK_URL;
 
         if (githubToken && githubRepo) {
             console.log(`🚀 Pushing update to GitHub (${githubRepo})...`);

@@ -1,0 +1,22 @@
+{
+  "highlights": [
+    {
+      "id": "1",
+      "name": "Margherita Classica",
+      "description": "San Marzano tomatoes, fresh mozzarella, basil, and extra virgin olive oil.",
+      "price": "$16.00"
+    },
+    {
+      "id": "2",
+      "name": "Pepperoni Perfetto",
+      "description": "Double pepperoni, mozzarella, rich tomato sauce, hot honey drizzle.",
+      "price": "$19.00"
+    },
+    {
+      "id": "3",
+      "name": "Tartufo Funghi",
+      "description": "Wild mushroom blend, truffle oil, roasted garlic, mozzarella, and thyme.",
+      "price": "$22.00"
+    }
+  ]
+}

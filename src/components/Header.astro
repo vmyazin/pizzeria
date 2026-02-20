@@ -1,0 +1,60 @@
+---
+---
+<header class="header">
+	<div class="header-content">
+		<a href="/" class="logo">
+			<img src="/images/logo.png" alt="Giacomo's Pizza Logo" />
+		</a>
+		<nav>
+			<a href="/">Home</a>
+			<a href="/about">Our Story</a>
+			<a href="/#menu" class="cta-btn">View Menu</a>
+		</nav>
+	</div>
+</header>
+<style>
+	.header {
+		background: rgba(253, 250, 245, 0.9);
+		backdrop-filter: blur(12px);
+		border-bottom: 2px solid var(--border);
+		position: sticky;
+		top: 0;
+		z-index: 100;
+	}
+	.header-content {
+		max-width: 1200px;
+		margin: 0 auto;
+		padding: 1rem 2rem;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+	}
+	.logo img {
+		height: 56px;
+		display: block;
+	}
+	nav {
+		display: flex;
+		gap: 2.5rem;
+		align-items: center;
+	}
+	nav a {
+		font-weight: 600;
+		font-size: 1rem;
+		letter-spacing: 0.5px;
+		color: var(--text-primary);
+	}
+	.cta-btn {
+		background: var(--brand-accent);
+		color: white;
+		padding: 0.6rem 1.2rem;
+		border-radius: 8px;
+		font-weight: 600;
+		transition: transform 0.2s ease, background 0.2s ease;
+	}
+	.cta-btn:hover {
+		background: var(--brand-accent-hover);
+		color: #111;
+		transform: translateY(-2px);
+	}
+</style>

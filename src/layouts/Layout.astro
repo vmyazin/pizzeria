@@ -1,0 +1,80 @@
+---
+interface Props {
+	title: string;
+}
+
+const { title } = Astro.props;
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="description" content="Authentic Neapolitan Pizza right in your neighborhood" />
+		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800&family=Outfit:wght@400;600&display=swap" rel="stylesheet">
+		<meta name="generator" content={Astro.generator} />
+		<title>{title} | Giacomo's Pizza</title>
+	</head>
+	<body>
+		<Header />
+		<main>
+			<slot />
+		</main>
+		<Footer />
+	</body>
+</html>
+<style is:global>
+	:root {
+		--bg-primary: #fdfaf5; /* Warm Bone/Paper */
+		--bg-secondary: #ffffff;
+		--text-primary: #1a1a1a;
+		--text-secondary: #4a4a4a;
+		--brand-accent: #ff8c00; /* Bright Italian Orange */
+		--brand-accent-hover: #ffcc00; /* Yellow */
+		--italian-green: #2d6a4f;
+		--italian-red: #d90429;
+		--border: #e0dcd5;
+	}
+	* {
+		box-sizing: border-box;
+		margin: 0;
+		padding: 0;
+	}
+	html {
+		font-family: 'Inter', sans-serif;
+		background: var(--bg-primary);
+		color: var(--text-primary);
+		line-height: 1.6;
+		scroll-behavior: smooth;
+	}
+	body {
+		min-height: 100vh;
+		display: flex;
+		flex-direction: column;
+		background: linear-gradient(135deg, #fff3b0 0%, #ffb703 100%);
+		background-attachment: fixed;
+	}
+	main {
+		flex: 1;
+		width: 100%;
+		max-width: 1200px;
+		margin: 0 auto;
+		padding: 2rem;
+	}
+	h1, h2, h3, h4 {
+		font-family: 'Outfit', sans-serif;
+		font-weight: 600;
+	}
+	a {
+		color: inherit;
+		text-decoration: none;
+		transition: color 0.2s ease;
+	}
+	a:hover {
+		color: var(--brand-accent);
+	}
+</style>

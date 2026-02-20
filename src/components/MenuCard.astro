@@ -1,0 +1,67 @@
+---
+interface Props {
+	name: string;
+	description: string;
+	price: string;
+}
+
+const { name, description, price } = Astro.props;
+---
+<div class="menu-card">
+	<div class="card-header">
+		<h3 class="name">{name}</h3>
+		<span class="price">{price}</span>
+	</div>
+	<p class="description">{description}</p>
+</div>
+<style>
+	.menu-card {
+		background: var(--bg-secondary);
+		border: 1px solid var(--border);
+		border-radius: 16px;
+		padding: 2rem;
+		transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+		position: relative;
+		overflow: hidden;
+		box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+	}
+	.menu-card::before {
+		content: '';
+		position: absolute;
+		top: 0; left: 0; right: 0;
+		height: 6px;
+		background: linear-gradient(90deg, var(--italian-green), #fff, var(--italian-red));
+		opacity: 0.8;
+		transition: height 0.3s ease;
+	}
+	.menu-card:hover {
+		transform: translateY(-8px) scale(1.02);
+		box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+		border-color: var(--brand-accent);
+	}
+	.menu-card:hover::before {
+		height: 10px;
+	}
+	.card-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: baseline;
+		margin-bottom: 1rem;
+		gap: 1rem;
+	}
+	.name {
+		font-size: 1.25rem;
+		color: var(--text-primary);
+	}
+	.price {
+		font-weight: 600;
+		color: var(--brand-accent-hover);
+		font-size: 1.1rem;
+		white-space: nowrap;
+	}
+	.description {
+		color: var(--text-secondary);
+		font-size: 0.95rem;
+		line-height: 1.5;
+	}
+</style>

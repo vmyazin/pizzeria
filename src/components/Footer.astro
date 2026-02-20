@@ -1,0 +1,82 @@
+---
+import hoursData from '../../content/hours.json';
+---
+<footer class="footer">
+	<div class="footer-content">
+		<div class="footer-section">
+			<h3>Giacomo's Pizzeria</h3>
+			<p>Authentic Neapolitan-style pizza brought straight from our oven to your table. Crafted with love, served with passion.</p>
+		</div>
+		<div class="footer-section">
+			<h3>Working Hours</h3>
+			<ul class="hours-list">
+				<li><span>Mon</span> <span>{hoursData.monday}</span></li>
+				<li><span>Tue</span> <span>{hoursData.tuesday}</span></li>
+				<li><span>Wed</span> <span>{hoursData.wednesday}</span></li>
+				<li><span>Thu</span> <span>{hoursData.thursday}</span></li>
+				<li><span>Fri</span> <span>{hoursData.friday}</span></li>
+				<li><span>Sat</span> <span>{hoursData.saturday}</span></li>
+				<li><span>Sun</span> <span>{hoursData.sunday}</span></li>
+			</ul>
+		</div>
+		<div class="footer-section">
+			<h3>Visit Us</h3>
+			<p>123 Pizza Lane, Food District<br>New York, NY 10001<br>(555) 123-4567</p>
+		</div>
+	</div>
+	<div class="footer-bottom">
+		<p>&copy; {new Date().getFullYear()} Giacomo's Pizza. All rights reserved.</p>
+	</div>
+</footer>
+<style>
+	.footer {
+		background: var(--bg-secondary);
+		border-top: 1px solid var(--border);
+		padding: 3rem 2rem 1rem;
+		margin-top: 2rem;
+	}
+	.footer-content {
+		max-width: 1200px;
+		margin: 0 auto;
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+		gap: 2rem;
+		margin-bottom: 2rem;
+	}
+	.footer-section h3 {
+		font-size: 1.3rem;
+		margin-bottom: 1.5rem;
+		color: var(--italian-green);
+		text-transform: uppercase;
+		letter-spacing: 1px;
+	}
+	.footer-section p {
+		color: var(--text-secondary);
+		line-height: 1.8;
+	}
+	.hours-list {
+		list-style: none;
+		color: var(--text-secondary);
+	}
+	.hours-list li {
+		display: flex;
+		justify-content: space-between;
+		margin-bottom: 0.6rem;
+		border-bottom: 1px solid var(--border);
+		padding-bottom: 0.4rem;
+	}
+	.hours-list li:last-child {
+		border-bottom: none;
+	}
+	.hours-list li span:first-child {
+		font-weight: 600;
+		color: var(--brand-accent);
+	}
+	.footer-bottom {
+		text-align: center;
+		padding-top: 2rem;
+		border-top: 1px solid var(--border);
+		color: var(--text-secondary);
+		font-size: 0.9rem;
+	}
+</style>

@@ -2,7 +2,7 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 import * as fs from 'fs';
 import * as path from 'path';
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
+const genAI = new GoogleGenerativeAI(import.meta.env.GEMINI_API_KEY || '');
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
 export async function analyzeEmailIntent(subject: string, text: string) {

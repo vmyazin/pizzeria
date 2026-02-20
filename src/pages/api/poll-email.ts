@@ -7,8 +7,8 @@ export const GET: APIRoute = async ({ request }) => {
   
   const config = {
       imap: {
-          user: process.env.GMAIL_USER || '',
-          password: process.env.GMAIL_APP_PASSWORD || '',
+          user: import.meta.env.GMAIL_USER || '',
+          password: import.meta.env.GMAIL_APP_PASSWORD || '',
           host: 'imap.gmail.com',
           port: 993,
           tls: true,
@@ -56,7 +56,7 @@ export const GET: APIRoute = async ({ request }) => {
               console.log(`Body Snippet: ${parsed.text?.substring(0, 100)}...`);
               
               const sender = parsed.from?.value[0]?.address;
-              if (sender && sender === process.env.OWNER_EMAIL) {
+              if (sender && sender === import.meta.env.OWNER_EMAIL) {
                  console.log('✅ Email is from owner. Sending to process-change analyzer...');
                  // Pass this text to the process-change handler logic somehow (we will write that next)
                  await processEmailIntent(parsed.subject || '', parsed.text || '', sender);
@@ -129,13 +129,13 @@ async function processEmailIntent(subject: string, text: string, sender: string)
     const transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
-            user: process.env.GMAIL_USER,
-            pass: process.env.GMAIL_APP_PASSWORD
+            user: import.meta.env.GMAIL_USER,
+            pass: import.meta.env.GMAIL_APP_PASSWORD
         }
     });
 
     const mailOptions = {
-        from: process.env.GMAIL_USER,
+        from: import.meta.env.GMAIL_USER,
         to: sender,
         subject: `[Confirm Update] Giacomo's Pizza Website - ID: ${changeId}`,
         text: `Hello,\n\nI have analyzed your request ("${subject}").\n\nBased on my understanding, here is the exact JSON data that will be updated on the website:\n\n${JSON.stringify(analysisResult, null, 2)}\n\nIf this looks correct, please reply to this email exactly with "YES" to deploy this change live.\n\nThanks,\nGiacomo's Pizza Bot`

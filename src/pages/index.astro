@@ -5,9 +5,10 @@ import menuData from '../../content/menu.json';
 ---
 
 <Layout title="Menu Highlights">
-	<section class="hero">
-		<div class="hero-image-wrapper">
+	<section class="hero" slot="hero">
+		<div class="hero-background">
 			<img src="/images/hero_margarita.png" alt="A classic, fresh Margherita pizza" class="hero-image" />
+			<div class="hero-overlay"></div>
 		</div>
 		<div class="hero-content">
 			<h1>The <span class="text-gradient">True Taste</span> of Naples</h1>
@@ -34,9 +35,15 @@ import menuData from '../../content/menu.json';
 
 <style>
 	.hero {
-		padding: 5rem 0;
-		text-align: center;
 		position: relative;
+		width: 100%;
+		min-height: 85vh;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		text-align: center;
+		overflow: hidden;
+		padding: 5rem 2rem;
 	}
 	.hero::after {
 		content: '';
@@ -49,45 +56,58 @@ import menuData from '../../content/menu.json';
 		background: linear-gradient(90deg, var(--italian-green), #ffffff, var(--italian-red));
 		border-radius: 2px;
 		box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+		z-index: 2;
 	}
-	.hero-image-wrapper {
-		max-width: 800px;
-		margin: 0 auto 3rem;
-		border-radius: 24px;
-		overflow: hidden;
-		box-shadow: 0 20px 40px rgba(0,0,0,0.15);
-		border: 8px solid rgba(255, 255, 255, 0.4);
+	.hero-background {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		z-index: 0;
 	}
 	.hero-image {
 		width: 100%;
-		height: auto;
-		display: block;
+		height: 100%;
 		object-fit: cover;
-		transition: transform 0.5s ease;
+		display: block;
 	}
-	.hero-image-wrapper:hover .hero-image {
-		transform: scale(1.05);
+	.hero-overlay {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background: linear-gradient(to bottom, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.8));
+	}
+	.hero-content {
+		position: relative;
+		z-index: 1;
+		max-width: 900px;
+		margin: 0 auto;
 	}
 	h1 {
 		font-size: 5.5rem;
 		line-height: 1;
 		margin-bottom: 1rem;
 		letter-spacing: -4px;
-		color: var(--text-primary);
+		color: #ffffff;
+		text-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
 	}
 	.text-gradient {
-		background: linear-gradient(90deg, var(--italian-green), var(--brand-accent), var(--italian-red));
+		background: linear-gradient(90deg, #4ad690, #ffd166, #ff5964); /* Brighter gradient for dark background */
 		-webkit-background-clip: text;
 		-webkit-text-fill-color: transparent;
 		background-clip: text;
-		filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+		filter: drop-shadow(0 2px 8px rgba(0,0,0,0.6));
 	}
 	.hero p {
 		font-size: 1.6rem;
-		color: var(--text-secondary);
+		color: #fdfaf5;
 		max-width: 800px;
 		margin: 0 auto 2.5rem;
-		font-weight: 400;
+		font-weight: 500;
+		text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);
 	}
 	.hero-buttons {
 		display: flex;
@@ -102,11 +122,11 @@ import menuData from '../../content/menu.json';
 		text-transform: uppercase;
 		letter-spacing: 1.5px;
 		transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-		box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+		box-shadow: 0 4px 10px rgba(0,0,0,0.3);
 	}
 	.btn:hover {
 		transform: translateY(-4px);
-		box-shadow: 0 15px 30px rgba(255, 140, 0, 0.3);
+		box-shadow: 0 15px 30px rgba(255, 140, 0, 0.4);
 	}
 	.btn-primary {
 		background: var(--brand-accent);
@@ -117,13 +137,14 @@ import menuData from '../../content/menu.json';
 		background: var(--brand-accent-hover);
 	}
 	.btn-secondary {
-		background: #ffffff;
-		color: var(--italian-green);
-		border: 3px solid var(--italian-green);
+		background: rgba(255, 255, 255, 0.1);
+		backdrop-filter: blur(8px);
+		color: #ffffff;
+		border: 3px solid #ffffff;
 	}
 	.btn-secondary:hover {
-		background: var(--italian-green);
-		color: #ffffff;
+		background: #ffffff;
+		color: var(--text-primary);
 	}
 	.menu-section {
 		padding: 3rem 0;

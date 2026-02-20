@@ -3,7 +3,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 const genAI = new GoogleGenerativeAI(import.meta.env.GEMINI_API_KEY || '');
-const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+const model = genAI.getGenerativeModel({ model: "gemini-3-flash-preview" });
 
 export async function analyzeEmailIntent(subject: string, text: string) {
     console.log('\n--- [GEMINI] Starting Intent Analysis ---');

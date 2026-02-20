@@ -57,9 +57,23 @@ export const GET: APIRoute = async ({ request }) => {
               
               const sender = parsed.from?.value[0]?.address;
               if (sender && sender === import.meta.env.OWNER_EMAIL) {
-                 console.log('✅ Email is from owner. Sending to process-change analyzer...');
-                 // Pass this text to the process-change handler logic somehow (we will write that next)
-                 await processEmailIntent(parsed.subject || '', parsed.text || '', sender);
+                 const bodyText = (parsed.text || '').trim().toUpperCase();
+                 const subject = parsed.subject || '';
+
+                 if (subject.includes('[Confirm Update]') && bodyText.includes('YES')) {
+                    const idMatch = subject.match(/ID: (\d+)/);
+                    const changeId = idMatch ? idMatch[1] : null;
+                    
+                    if (changeId) {
+                        console.log(`✅ Received approval for Change ID: ${changeId}. Applying now...`);
+                        await applyPendingChange(changeId);
+                    } else {
+                        console.error('❌ Received YES but could not find Change ID in subject.');
+                    }
+                 } else {
+                    console.log('✅ New modification request from owner. Sending to analyzer...');
+                    await processEmailIntent(subject, parsed.text || '', sender);
+                 }
               } else {
                  console.log(`⚠️ Ignored email from unauthorized sender: ${sender}`);
               }
@@ -83,6 +97,7 @@ export const GET: APIRoute = async ({ request }) => {
 }
 
 import { analyzeEmailIntent } from '../../lib/process-change';
+import { applyPendingChange } from '../../lib/apply-logic';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as nodemailer from 'nodemailer';

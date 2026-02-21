@@ -1,19 +1,3 @@
 {
-  "pending": [
-    {
-      "id": "1771699945970",
-      "timestamp": "2026-02-21T18:52:25.970Z",
-      "requestor": "productizement@gmail.com",
-      "requestedSubject": "need update",
-      "proposedState": {
-        "monday": "2:00 PM - 8:00 PM",
-        "tuesday": "12:30 PM - 9:00 PM",
-        "wednesday": "11:00 AM - 9:00 PM",
-        "thursday": "2:00 PM - 10:00 PM",
-        "friday": "11:00 AM - 11:00 PM",
-        "saturday": "12:00 PM - 11:00 PM",
-        "sunday": "12:00 PM - 9:00 PM"
-      }
-    }
-  ]
+  "pending": []
 }

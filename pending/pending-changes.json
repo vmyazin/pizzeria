@@ -14,21 +14,6 @@
         "saturday": "12:00 PM - 1:30 AM",
         "sunday": "12:00 PM - 9:00 PM"
       }
-    },
-    {
-      "id": "1771700507273",
-      "timestamp": "2026-02-21T19:01:47.273Z",
-      "requestor": "productizement@gmail.com",
-      "requestedSubject": "Fwd: change hours",
-      "proposedState": {
-        "monday": "2:00 PM - 8:00 PM",
-        "tuesday": "12:30 PM - 9:00 PM",
-        "wednesday": "11:00 AM - 9:00 PM",
-        "thursday": "2:00 PM - 10:00 PM",
-        "friday": "11:00 AM - 11:00 PM",
-        "saturday": "12:00 PM - 1:30 AM",
-        "sunday": "12:00 PM - 9:00 PM"
-      }
     }
   ]
 }

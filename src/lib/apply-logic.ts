@@ -3,15 +3,35 @@ import * as path from 'path';
 
 export async function applyPendingChange(changeId: string) {
     console.log(`\n--- [APPLY] Applying Change ID: ${changeId} ---`);
-    const pendingPath = path.join(process.cwd(), 'pending', 'pending-changes.json');
-    const contentDir = path.join(process.cwd(), 'content');
+    const pendingPath = 'pending/pending-changes.json';
 
-    if (!fs.existsSync(pendingPath)) {
-        console.error('❌ pending-changes.json not found.');
+    const githubToken = import.meta.env.GITHUB_TOKEN || process.env.GITHUB_TOKEN;
+    const githubRepo = import.meta.env.GITHUB_REPO || process.env.GITHUB_REPO;
+    let pendingData = { pending: [] as any[] };
+    let sha: string | undefined = undefined;
+
+    if (!githubToken || !githubRepo) {
+        console.error('❌ GITHUB_TOKEN or GITHUB_REPO missing.');
         return;
     }
 
-    const pendingData = JSON.parse(fs.readFileSync(pendingPath, 'utf-8'));
+    try {
+        const res = await fetch(`https://api.github.com/repos/${githubRepo}/contents/${pendingPath}`, {
+            headers: { 'Authorization': `token ${githubToken}`, 'Accept': 'application/vnd.github.v3+json' }
+        });
+        if (res.ok) {
+            const fileData: any = await res.json();
+            sha = fileData.sha;
+            pendingData = JSON.parse(Buffer.from(fileData.content, 'base64').toString('utf-8'));
+        } else {
+            console.error('❌ pending-changes.json not found on GitHub.');
+            return;
+        }
+    } catch (e) {
+         console.error('❌ Error fetching pending-changes:', e);
+         return;
+    }
+
     const changeIndex = pendingData.pending.findIndex((c: any) => c.id === changeId);
 
     if (changeIndex === -1) {
@@ -35,16 +55,10 @@ export async function applyPendingChange(changeId: string) {
             return;
         }
 
-        console.log(`✍️ Updating ${targetFile}...`);
-        fs.writeFileSync(path.join(contentDir, targetFile), JSON.stringify(proposedState, null, 2));
-        console.log(`✅ ${targetFile} updated successfully.`);
+        console.log(`✍️ Updating ${targetFile} on GitHub...`);
 
         // Remove from pending
         pendingData.pending.splice(changeIndex, 1);
-        fs.writeFileSync(pendingPath, JSON.stringify(pendingData, null, 2));
-        console.log('🗑️ Change removed from pending list.');
-
-        // Fallback checks for both Vercel/Node environment and Astro Vite injected environment
         const githubToken = import.meta.env.GITHUB_TOKEN || process.env.GITHUB_TOKEN;
         const githubRepo = import.meta.env.GITHUB_REPO || process.env.GITHUB_REPO;
         const vercelHook = import.meta.env.VERCEL_DEPLOY_HOOK_URL || process.env.VERCEL_DEPLOY_HOOK_URL;
@@ -64,7 +78,7 @@ export async function applyPendingChange(changeId: string) {
                     }
                 });
                 const fileData: any = await getFileRes.json();
-                const sha = fileData.sha;
+                const targetSha = fileData.sha;
 
                 // Put new file content
                 const updateRes = await fetch(`https://api.github.com/repos/${githubRepo}/contents/${filePath}`, {
@@ -77,7 +91,7 @@ export async function applyPendingChange(changeId: string) {
                     body: JSON.stringify({
                         message: `Automated update for ${targetFile} via Email`,
                         content: fileContentBase64,
-                        sha: sha
+                        sha: targetSha
                     })
                 });
 
@@ -86,6 +100,18 @@ export async function applyPendingChange(changeId: string) {
                 } else {
                     console.error('❌ Failed to push to GitHub:', await updateRes.text());
                 }
+
+                // Put pending changes back to delete the change
+                await fetch(`https://api.github.com/repos/${githubRepo}/contents/${pendingPath}`, {
+                    method: 'PUT',
+                    headers: { 'Authorization': `token ${githubToken}`, 'Accept': 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        message: `chore: remove pending change ${changeId} [skip ci]`,
+                        content: Buffer.from(JSON.stringify(pendingData, null, 2)).toString('base64'),
+                        sha: sha
+                    })
+                });
+                console.log('🗑️ Change removed from pending list on GitHub.');
             } catch (err) {
                 console.error('❌ Error interacting with GitHub API:', err);
             }

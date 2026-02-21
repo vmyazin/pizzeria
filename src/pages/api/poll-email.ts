@@ -114,15 +114,26 @@ async function processEmailIntent(subject: string, text: string, sender: string)
     }
 
     console.log('\n--- 📝 Preparing Pending Change ---');
-    const pendingPath = path.join(process.cwd(), 'pending', 'pending-changes.json');
+    const pendingPath = 'pending/pending-changes.json';
     let pendingData = { pending: [] as any[] };
-    
-    try {
-        if (fs.existsSync(pendingPath)) {
-            pendingData = JSON.parse(fs.readFileSync(pendingPath, 'utf-8'));
+    let sha: string | undefined = undefined;
+
+    const githubToken = import.meta.env.GITHUB_TOKEN;
+    const githubRepo = import.meta.env.GITHUB_REPO;
+
+    if (githubToken && githubRepo) {
+        try {
+            const res = await fetch(`https://api.github.com/repos/${githubRepo}/contents/${pendingPath}`, {
+                headers: { 'Authorization': `token ${githubToken}`, 'Accept': 'application/vnd.github.v3+json' }
+            });
+            if (res.ok) {
+                const fileData: any = await res.json();
+                sha = fileData.sha;
+                pendingData = JSON.parse(Buffer.from(fileData.content, 'base64').toString('utf-8'));
+            }
+        } catch (e) {
+            console.log('📝 Creating new pending-changes.json file on GitHub...');
         }
-    } catch (e) {
-        console.log('📝 Creating new pending-changes.json file...');
     }
 
     // Give it a unique ID
@@ -137,8 +148,20 @@ async function processEmailIntent(subject: string, text: string, sender: string)
 
     pendingData.pending.push(newChange);
     
-    fs.writeFileSync(pendingPath, JSON.stringify(pendingData, null, 2));
-    console.log(`✅ Pending change ${changeId} saved to disk waiting for approval.`);
+    if (githubToken && githubRepo) {
+       await fetch(`https://api.github.com/repos/${githubRepo}/contents/${pendingPath}`, {
+           method: 'PUT',
+           headers: { 'Authorization': `token ${githubToken}`, 'Accept': 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
+           body: JSON.stringify({
+               message: `chore: add pending change ${changeId} [skip ci]`,
+               content: Buffer.from(JSON.stringify(pendingData, null, 2)).toString('base64'),
+               sha: sha
+           })
+       });
+       console.log(`✅ Pending change ${changeId} saved to disk waiting for approval.`);
+    } else {
+       console.log('❌ GITHUB_TOKEN or GITHUB_REPO not set. Skipping DB save.');
+    }
 
     console.log('\n--- 📧 Sending Confirmation Email ---');
     

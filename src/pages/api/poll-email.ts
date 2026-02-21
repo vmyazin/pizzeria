@@ -185,12 +185,15 @@ async function processEmailIntent(subject: string, text: string, sender: string)
     const requiredAlias = import.meta.env.ALIAS_TAG;
     const aliasAddress = requiredAlias ? gmailUser.replace('@', `${requiredAlias}@`) : gmailUser;
 
+    const cleanText = text.trim().replace(/\n/g, ' ');
+    const displayData = JSON.stringify(analysisResult, null, 2).replace(/^\{\s*\n/, '').replace(/\n\s*\}$/, '');
+
     const mailOptions = {
         from: import.meta.env.GMAIL_USER,
         replyTo: aliasAddress,
         to: sender,
         subject: `[Confirm Update] Giacomo's Pizza Website - ID: ${changeId}`,
-        text: `Hello,\n\nI have analyzed your request ("${subject}").\n\nBased on my understanding, here is the exact JSON data that will be updated on the website:\n\n${JSON.stringify(analysisResult, null, 2)}\n\nIf this looks correct, please reply to this email exactly with "YES" to deploy this change live.\n\nThanks,\nGiacomo's Pizza Bot`
+        text: `Hello partner,\n\nI've received your request ("${subject}" + "${cleanText}").\n\nBased on my understanding, here is the exact data that will be updated on the website:\n\n${displayData}\n\nIf this looks correct, reply to this email with "YES" to publish your changes on the website.\n\nThanks,\nGiacomo's Pizza Bot`
     };
 
     try {

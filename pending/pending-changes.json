@@ -1,3 +1,14 @@
 {
-  "pending": []
+  "pending": [
+    {
+      "id": "1771698629363",
+      "timestamp": "2026-02-21T18:30:29.363Z",
+      "requestor": "productizement@gmail.com",
+      "requestedSubject": "update about page",
+      "proposedState": {
+        "title": "Our Story",
+        "content": "Founded in 2010 by Giacomo himself, Giacomo's Pizza has been serving authentic Neapolitan-style pizza to our beloved neighborhood for nearly four decades. We believe in simple, fresh ingredients, bringing a slice of Naples right to your table. if you try our pizza once, you'll get addicted and you'll be coming back for more."
+      }
+    }
+  ]
 }

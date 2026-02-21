@@ -57,7 +57,11 @@ export const GET: APIRoute = async ({ request }) => {
               console.log(`Body Snippet: ${parsed.text?.substring(0, 100)}...`);
               
               const sender = parsed.from?.value[0]?.address;
-              if (sender && sender === import.meta.env.OWNER_EMAIL) {
+              const recipients = parsed.to?.value || [];
+              const requiredAlias = import.meta.env.ALIAS_TAG;
+              const hasAlias = requiredAlias ? recipients.some(r => r.address && r.address.includes(`${requiredAlias}@`)) : true;
+
+              if (sender && sender === import.meta.env.OWNER_EMAIL && hasAlias) {
                  const bodyText = (parsed.text || '').trim().toUpperCase();
                  const subject = parsed.subject || '';
 
@@ -76,7 +80,11 @@ export const GET: APIRoute = async ({ request }) => {
                     await processEmailIntent(subject, parsed.text || '', sender);
                  }
               } else {
-                 console.log(`⚠️ Ignored email from unauthorized sender: ${sender}`);
+                 if (sender !== import.meta.env.OWNER_EMAIL) {
+                    console.log(`⚠️ Ignored email from unauthorized sender: ${sender}`);
+                 } else if (requiredAlias) {
+                    console.log(`⚠️ Ignored email because recipient does not include the ${requiredAlias}@ alias.`);
+                 }
               }
           }
       }
@@ -173,8 +181,13 @@ async function processEmailIntent(subject: string, text: string, sender: string)
         }
     });
 
+    const gmailUser = import.meta.env.GMAIL_USER || '';
+    const requiredAlias = import.meta.env.ALIAS_TAG;
+    const aliasAddress = requiredAlias ? gmailUser.replace('@', `${requiredAlias}@`) : gmailUser;
+
     const mailOptions = {
         from: import.meta.env.GMAIL_USER,
+        replyTo: aliasAddress,
         to: sender,
         subject: `[Confirm Update] Giacomo's Pizza Website - ID: ${changeId}`,
         text: `Hello,\n\nI have analyzed your request ("${subject}").\n\nBased on my understanding, here is the exact JSON data that will be updated on the website:\n\n${JSON.stringify(analysisResult, null, 2)}\n\nIf this looks correct, please reply to this email exactly with "YES" to deploy this change live.\n\nThanks,\nGiacomo's Pizza Bot`

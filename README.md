@@ -1,46 +1,71 @@
-# Astro Starter Kit: Basics
+# Pizzeria — Email-Controlled CMS Demo
+
+A demo Astro site for a fictitious pizzeria (Giacomo's Pizza) that showcases an email-controlled CMS. The site renders content from JSON files and lets the “owner” update menu, hours, or about copy by emailing the system.
+
+## What This Demonstrates
+
+- A polished marketing site for a fictional pizzeria.
+- Email-driven content updates (menu, hours, about).
+- AI-assisted intent parsing for change proposals.
+- A human-in-the-loop approval flow before changes are applied.
+
+## Quickstart
 
 ```sh
-npm create astro@latest -- --template basics
+npm install
+npm run dev
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+Visit `http://localhost:4321`.
 
-## 🚀 Project Structure
+## Email CMS Flow
 
-Inside of your Astro project, you'll see the following folders and files:
+1. Owner emails an update request (menu, hours, or about).
+2. The `/api/poll-email` endpoint reads unread emails via IMAP.
+3. Gemini analyzes the email and proposes JSON updates.
+4. A confirmation email is sent to the owner.
+5. The owner replies with `YES` to approve.
+6. The change is applied to `content/*.json` and can optionally push to GitHub and trigger a deploy.
 
-```text
-/
-├── public/
-│   └── favicon.svg
-├── src
-│   ├── assets
-│   │   └── astro.svg
-│   ├── components
-│   │   └── Welcome.astro
-│   ├── layouts
-│   │   └── Layout.astro
-│   └── pages
-│       └── index.astro
-└── package.json
+## Content Files
+
+- `content/menu.json`
+- `content/hours.json`
+- `content/about.json`
+
+These files are the source of truth for the site content.
+
+## Environment Variables
+
+Create a `.env` file at the project root with:
+
+- `GMAIL_USER`
+- `GMAIL_APP_PASSWORD`
+- `OWNER_EMAIL`
+- `GEMINI_API_KEY`
+
+Optional (for automated publish/deploy):
+
+- `GITHUB_TOKEN`
+- `GITHUB_REPO` (format: `owner/repo`)
+- `VERCEL_DEPLOY_HOOK_URL`
+
+## Run Email Polling
+
+Manually trigger polling while running the dev server:
+
+```sh
+curl "http://localhost:4321/api/poll-email"
 ```
 
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
+In production, this is intended to be called by a cron job or scheduler.
 
-## 🧞 Commands
+## Scripts
 
-All commands are run from the root of the project, from a terminal:
+- `npm run dev` — local dev server
+- `npm run build` — production build
+- `npm run preview` — preview build
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+## Notes
 
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+This is a demo project intended to illustrate an email-controlled CMS workflow, not a production-ready CMS.

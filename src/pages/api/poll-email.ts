@@ -1,3 +1,4 @@
+export const prerender = false;
 import type { APIRoute } from 'astro';
 import * as imaps from 'imap-simple';
 import { simpleParser } from 'mailparser';
